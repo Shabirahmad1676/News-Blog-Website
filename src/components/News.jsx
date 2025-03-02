@@ -7,6 +7,7 @@ import { CgProfile } from "react-icons/cg";
 import axios from "axios";
 import Website from "../assets/website.png";
 import NewsModalbox from "./NewsModalbox";
+import Bookmark from "./Bookmark";
 
 const categories = [
   "general",
@@ -28,6 +29,8 @@ const News = () => {
   const [query, setQuery] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [showArticle, setShowArticle] = useState(null)
+  const [showBookmarkModal, setShowBookmarkModal] = useState(false)
+  const [bookmark, setBookmark] = useState([])
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -62,6 +65,12 @@ const News = () => {
     setShowModal(true)
   }
   
+ const handleBookmark = (article)=>{
+  setBookmark((prevBookmarks)=>{
+    const updateBookmark = prevBookmarks.find((bookmark)=> bookmark.title === article.title) ? prevBookmarks.filter((bookmark)=> bookmark.title !== article.title) : [...prevBookmarks,article]
+    return updateBookmark
+  })
+ }
 
   return (
     <div className="flex flex-col w-[100%]  bg-[#0E1012]">
@@ -112,7 +121,9 @@ const News = () => {
                 <h1 className="absolute bottom-0 text-center text-white bg-gray-800 opacity-80 font-bold text-2xl rounded-2xl p-1">
                   {headlines.title}
                 </h1>
-                <LuBookMarked className="top-2 absolute right-3 hover:text-orange-400 text-black font-bold text-2xl " />
+                <LuBookMarked onClick={(e)=>{ e.stopPropagation()
+                  handleBookmark(headlines)
+                }} className={`top-2 absolute right-3 hover:text-orange-400 ${bookmark.some((bookmark)=> bookmark.title === article.title) ? 'block' : 'hidden'} text-black font-bold text-2xl`} />
               </div>
             )}
           </div>
@@ -140,7 +151,7 @@ const News = () => {
         </div>
         {/* news modal box */}
         <NewsModalbox modal={showModal} article={showArticle} onClose={()=>setShowModal(false)} />
-
+        {/* <Bookmark modal={showModal} article={showArticle}  onClose={()=>setShowModal(false)} /> */}
 
         {/* my blogs */}
         <div className="w-[30%] m-2 p-2">my blogs</div>
