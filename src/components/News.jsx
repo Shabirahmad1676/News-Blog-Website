@@ -44,6 +44,9 @@ const News = () => {
       const fetchDataNews = response.data.articles;
       setHeadlines(fetchDataNews[8]);
       setNews(fetchDataNews.slice(1, 7));
+
+      const savedbookmark = JSON.parse(localStorage.getItem("bookmark")) || []
+      setBookmark(savedbookmark)
     };
 
     fetchNews();
@@ -72,6 +75,7 @@ const News = () => {
       )
         ? prevBookmarks.filter((bookmark) => bookmark.title !== article.title)
         : [...prevBookmarks, article];
+        localStorage.setItem("bookmark",JSON.stringify(updateBookmark))
       return updateBookmark;
     });
   };
